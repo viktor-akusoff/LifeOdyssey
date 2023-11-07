@@ -53,6 +53,9 @@ class LifeOdyssey(QMainWindow):
         eraseButton = self.ui.eraseButton
         eraseButton.setCheckable(True)
         eraseButton.clicked.connect(self.erase_button)
+        
+        frameSpinBox = self.ui.frameSpinBox
+        frameSpinBox.valueChanged.connect(self.update_value)
 
     def stop_button(self):
         self.iteration_number = 0
@@ -93,6 +96,9 @@ class LifeOdyssey(QMainWindow):
 
     def update_frame(self):
         self.ui.frameSpinBox.setValue(self.iteration_number)
+
+    def update_value(self):
+        self.iteration_number = self.ui.frameSpinBox.value()
 
     def next_iteration(self):
         self.curr_time = self.curr_time.addSecs(0.25)
