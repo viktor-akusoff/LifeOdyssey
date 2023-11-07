@@ -53,7 +53,7 @@ class LifeOdyssey(QMainWindow):
         eraseButton = self.ui.eraseButton
         eraseButton.setCheckable(True)
         eraseButton.clicked.connect(self.erase_button)
-        
+
         frameSpinBox = self.ui.frameSpinBox
         frameSpinBox.valueChanged.connect(self.update_value)
 
