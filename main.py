@@ -1,9 +1,15 @@
 import sys
+from enum import Enum
 from PySide6.QtCore import QSize, QTime, QTimer
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QApplication, QMainWindow
 
 from ui_main import Ui_MainWindow
+
+
+class Mode(Enum):
+    DRAWING = 1
+    ERASING = 2
 
 
 class LifeOdyssey(QMainWindow):
@@ -18,6 +24,7 @@ class LifeOdyssey(QMainWindow):
         self.timer = QTimer()
         self.timer.timeout.connect(self.next_iteration)
         self.is_playing = False
+        self.mode = Mode.DRAWING
 
         stopButton = self.ui.stopButton
         stopButton.setCheckable(True)
@@ -77,10 +84,12 @@ class LifeOdyssey(QMainWindow):
         print("PALETTE")
 
     def draw_button(self):
-        print("DRAW")
+        self.mode = Mode.DRAWING
+        self.update_mode()
 
     def erase_button(self):
-        print("ERASE")
+        self.mode = Mode.ERASING
+        self.update_mode()
 
     def update_frame(self):
         self.ui.frameSpinBox.setValue(self.iteration_number)
@@ -91,6 +100,12 @@ class LifeOdyssey(QMainWindow):
         if self.iteration_number > 99:
             self.iteration_number = 0
         self.update_frame()
+
+    def update_mode(self):
+        if self.mode == Mode.DRAWING:
+            self.ui.modeLabel.setText("Режим: рисование")
+        elif self.mode == Mode.ERASING:
+            self.ui.modeLabel.setText("Режим: стирание")
 
 
 if __name__ == "__main__":
