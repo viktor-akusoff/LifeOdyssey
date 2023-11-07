@@ -1,0 +1,606 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>607</height>
+   </rect>
+  </property>
+  <property name="palette">
+   <palette>
+    <active/>
+    <inactive/>
+    <disabled/>
+   </palette>
+  </property>
+  <property name="contextMenuPolicy">
+   <enum>Qt::NoContextMenu</enum>
+  </property>
+  <property name="windowTitle">
+   <string>Life Odyssey</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QMenuBar {
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #f18701, stop:1 #f7b801);
+    spacing: 3px;
+}
+QMenuBar::item {
+	padding: 1px 4px;
+    background: transparent;
+    border-radius: 4px 4px 0px 0px;
+}
+QMenuBar::item:selected { /* when selected using mouse or keyboard */
+    background: #f7b801;
+}
+
+QMenu {
+	background-color: #f7b801;
+}</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <property name="styleSheet">
+    <string notr="true">background:qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0  #3d348b, stop:1 #7678ed);
+</string>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QGraphicsView" name="fieldGraphicsView">
+      <property name="styleSheet">
+       <string notr="true">border: 2px solid white;
+border-radius: 5px;</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QFrame" name="horizontalFrame">
+      <property name="styleSheet">
+       <string notr="true"> background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #f18701, stop:1 #f7b801);
+border-radius: 5px;
+padding: 0px;</string>
+      </property>
+      <layout class="QHBoxLayout" name="tools_layout">
+       <item>
+        <widget class="QPushButton" name="jumpBackwardButton">
+         <property name="styleSheet">
+          <string notr="true">QPushButton{
+	padding: 5px;
+	background: rgba(0,0,0,0);
+}
+QPushButton:hover {
+	background-color: #f7b801;
+}
+QPushButton:pressed {
+background-color: #f35b04;
+}</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="resource/res.qrc">
+           <normaloff>:/icons/icons/skip_previous.svg</normaloff>:/icons/icons/skip_previous.svg</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>24</width>
+           <height>24</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QSpinBox" name="frameSpinBox">
+         <property name="styleSheet">
+          <string notr="true">QSpinBox {
+	padding: 5px;
+	font-size: 14pt;
+	background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(255, 255, 255, 255), stop:0.65 rgba(255, 255, 255, 255), stop:0.66 transparent, stop:1 transparent);
+	border-radius: 5px;
+}
+
+QSpinBox::up-button {
+	background-color: transparent;
+	border-top-right-radius: 5px;
+	width: 20px; height: 20px;
+	subcontrol-origin: border;
+	subcontrol-position: top right;
+	image: url(:/icons/icons/arrow_drop_up.svg);
+}
+
+QSpinBox::down-button {
+	background-color: transparent;
+	border-bottom-right-radius: 5px;
+	width: 20px; height: 20px;
+	subcontrol-origin: border;
+	subcontrol-position: bottom right;
+	image: url(:/icons/icons/arrow_drop_down.svg);
+}
+
+QSpinBox::up-button:hover {
+	background-color: #f7b801;
+}
+QSpinBox::up-button:pressed {
+	background-color: #f35b04;
+}
+
+QSpinBox::down-button:hover {
+	background-color: #f7b801;
+}
+QSpinBox::down-button:pressed {
+	background-color: #f35b04;
+}</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="stopButton">
+         <property name="styleSheet">
+          <string notr="true">QPushButton{
+	padding: 5px;
+	background: rgba(0,0,0,0);
+}
+QPushButton:hover {
+	background-color: #f7b801;
+}
+QPushButton:pressed {
+	background-color: #f35b04;
+}</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="resource/res.qrc">
+           <normaloff>:/icons/icons/stop.svg</normaloff>:/icons/icons/stop.svg</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>24</width>
+           <height>24</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="playButton">
+         <property name="styleSheet">
+          <string notr="true">QPushButton{
+	padding: 5px;
+	background: rgba(0,0,0,0);
+}
+QPushButton:hover {
+	background-color: #f7b801;
+}
+QPushButton:pressed {
+	background-color: #f35b04;
+}</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="resource/res.qrc">
+           <normaloff>:/icons/icons/play_arrow.svg</normaloff>:/icons/icons/play_arrow.svg</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>24</width>
+           <height>24</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="jumpForwarButton">
+         <property name="styleSheet">
+          <string notr="true">QPushButton{
+	padding: 5px;
+	background: rgba(0,0,0,0);
+}
+QPushButton:hover {
+	background-color: #f7b801;
+}
+QPushButton:pressed {
+	background-color: #f35b04;
+}</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="resource/res.qrc">
+           <normaloff>:/icons/icons/skip_next.svg</normaloff>:/icons/icons/skip_next.svg</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>24</width>
+           <height>24</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QLabel" name="modeLabel">
+         <property name="styleSheet">
+          <string notr="true">QLabel {
+background-color: rgba(0,0,0,0);
+}</string>
+         </property>
+         <property name="text">
+          <string>Режим: рисование</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QPushButton" name="palleteButton">
+         <property name="styleSheet">
+          <string notr="true">QPushButton{
+	padding: 5px;
+	background: rgba(0,0,0,0);
+}
+QPushButton:hover {
+	background-color: #f7b801;
+}
+QPushButton:pressed {
+	background-color: #f35b04;
+}</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="resource/res.qrc">
+           <normaloff>:/icons/icons/palette.svg</normaloff>:/icons/icons/palette.svg</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>24</width>
+           <height>24</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="drawButton">
+         <property name="styleSheet">
+          <string notr="true">QPushButton{
+	padding: 5px;
+	background: rgba(0,0,0,0);
+}
+QPushButton:hover {
+	background-color: #f7b801;
+}
+QPushButton:pressed {
+	background-color: #f35b04;
+}</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="resource/res.qrc">
+           <normaloff>:/icons/icons/brush.svg</normaloff>:/icons/icons/brush.svg</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>24</width>
+           <height>24</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="eraseButton">
+         <property name="styleSheet">
+          <string notr="true">QPushButton{
+	padding: 5px;
+	background: rgba(0,0,0,0);
+}
+QPushButton:hover {
+	background-color: #f7b801;
+}
+QPushButton:pressed {
+	background-color: #f35b04;
+}</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="resource/res.qrc">
+           <normaloff>:/icons/icons/ink_eraser.svg</normaloff>:/icons/icons/ink_eraser.svg</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>24</width>
+           <height>24</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>19</height>
+    </rect>
+   </property>
+   <property name="palette">
+    <palette>
+     <active>
+      <colorrole role="Button">
+       <brush brushstyle="LinearGradientPattern">
+        <gradient startx="0.000000000000000" starty="0.000000000000000" endx="0.000000000000000" endy="1.000000000000000" type="LinearGradient" spread="PadSpread" coordinatemode="ObjectBoundingMode">
+         <gradientstop position="0.000000000000000">
+          <color alpha="255">
+           <red>241</red>
+           <green>135</green>
+           <blue>1</blue>
+          </color>
+         </gradientstop>
+         <gradientstop position="1.000000000000000">
+          <color alpha="255">
+           <red>247</red>
+           <green>184</green>
+           <blue>1</blue>
+          </color>
+         </gradientstop>
+        </gradient>
+       </brush>
+      </colorrole>
+      <colorrole role="Base">
+       <brush brushstyle="LinearGradientPattern">
+        <gradient startx="0.000000000000000" starty="0.000000000000000" endx="0.000000000000000" endy="1.000000000000000" type="LinearGradient" spread="PadSpread" coordinatemode="ObjectBoundingMode">
+         <gradientstop position="0.000000000000000">
+          <color alpha="255">
+           <red>241</red>
+           <green>135</green>
+           <blue>1</blue>
+          </color>
+         </gradientstop>
+         <gradientstop position="1.000000000000000">
+          <color alpha="255">
+           <red>247</red>
+           <green>184</green>
+           <blue>1</blue>
+          </color>
+         </gradientstop>
+        </gradient>
+       </brush>
+      </colorrole>
+      <colorrole role="Window">
+       <brush brushstyle="LinearGradientPattern">
+        <gradient startx="0.000000000000000" starty="0.000000000000000" endx="0.000000000000000" endy="1.000000000000000" type="LinearGradient" spread="PadSpread" coordinatemode="ObjectBoundingMode">
+         <gradientstop position="0.000000000000000">
+          <color alpha="255">
+           <red>241</red>
+           <green>135</green>
+           <blue>1</blue>
+          </color>
+         </gradientstop>
+         <gradientstop position="1.000000000000000">
+          <color alpha="255">
+           <red>247</red>
+           <green>184</green>
+           <blue>1</blue>
+          </color>
+         </gradientstop>
+        </gradient>
+       </brush>
+      </colorrole>
+     </active>
+     <inactive>
+      <colorrole role="Button">
+       <brush brushstyle="LinearGradientPattern">
+        <gradient startx="0.000000000000000" starty="0.000000000000000" endx="0.000000000000000" endy="1.000000000000000" type="LinearGradient" spread="PadSpread" coordinatemode="ObjectBoundingMode">
+         <gradientstop position="0.000000000000000">
+          <color alpha="255">
+           <red>241</red>
+           <green>135</green>
+           <blue>1</blue>
+          </color>
+         </gradientstop>
+         <gradientstop position="1.000000000000000">
+          <color alpha="255">
+           <red>247</red>
+           <green>184</green>
+           <blue>1</blue>
+          </color>
+         </gradientstop>
+        </gradient>
+       </brush>
+      </colorrole>
+      <colorrole role="Base">
+       <brush brushstyle="LinearGradientPattern">
+        <gradient startx="0.000000000000000" starty="0.000000000000000" endx="0.000000000000000" endy="1.000000000000000" type="LinearGradient" spread="PadSpread" coordinatemode="ObjectBoundingMode">
+         <gradientstop position="0.000000000000000">
+          <color alpha="255">
+           <red>241</red>
+           <green>135</green>
+           <blue>1</blue>
+          </color>
+         </gradientstop>
+         <gradientstop position="1.000000000000000">
+          <color alpha="255">
+           <red>247</red>
+           <green>184</green>
+           <blue>1</blue>
+          </color>
+         </gradientstop>
+        </gradient>
+       </brush>
+      </colorrole>
+      <colorrole role="Window">
+       <brush brushstyle="LinearGradientPattern">
+        <gradient startx="0.000000000000000" starty="0.000000000000000" endx="0.000000000000000" endy="1.000000000000000" type="LinearGradient" spread="PadSpread" coordinatemode="ObjectBoundingMode">
+         <gradientstop position="0.000000000000000">
+          <color alpha="255">
+           <red>241</red>
+           <green>135</green>
+           <blue>1</blue>
+          </color>
+         </gradientstop>
+         <gradientstop position="1.000000000000000">
+          <color alpha="255">
+           <red>247</red>
+           <green>184</green>
+           <blue>1</blue>
+          </color>
+         </gradientstop>
+        </gradient>
+       </brush>
+      </colorrole>
+     </inactive>
+     <disabled>
+      <colorrole role="Button">
+       <brush brushstyle="LinearGradientPattern">
+        <gradient startx="0.000000000000000" starty="0.000000000000000" endx="0.000000000000000" endy="1.000000000000000" type="LinearGradient" spread="PadSpread" coordinatemode="ObjectBoundingMode">
+         <gradientstop position="0.000000000000000">
+          <color alpha="255">
+           <red>241</red>
+           <green>135</green>
+           <blue>1</blue>
+          </color>
+         </gradientstop>
+         <gradientstop position="1.000000000000000">
+          <color alpha="255">
+           <red>247</red>
+           <green>184</green>
+           <blue>1</blue>
+          </color>
+         </gradientstop>
+        </gradient>
+       </brush>
+      </colorrole>
+      <colorrole role="Base">
+       <brush brushstyle="LinearGradientPattern">
+        <gradient startx="0.000000000000000" starty="0.000000000000000" endx="0.000000000000000" endy="1.000000000000000" type="LinearGradient" spread="PadSpread" coordinatemode="ObjectBoundingMode">
+         <gradientstop position="0.000000000000000">
+          <color alpha="255">
+           <red>241</red>
+           <green>135</green>
+           <blue>1</blue>
+          </color>
+         </gradientstop>
+         <gradientstop position="1.000000000000000">
+          <color alpha="255">
+           <red>247</red>
+           <green>184</green>
+           <blue>1</blue>
+          </color>
+         </gradientstop>
+        </gradient>
+       </brush>
+      </colorrole>
+      <colorrole role="Window">
+       <brush brushstyle="LinearGradientPattern">
+        <gradient startx="0.000000000000000" starty="0.000000000000000" endx="0.000000000000000" endy="1.000000000000000" type="LinearGradient" spread="PadSpread" coordinatemode="ObjectBoundingMode">
+         <gradientstop position="0.000000000000000">
+          <color alpha="255">
+           <red>241</red>
+           <green>135</green>
+           <blue>1</blue>
+          </color>
+         </gradientstop>
+         <gradientstop position="1.000000000000000">
+          <color alpha="255">
+           <red>247</red>
+           <green>184</green>
+           <blue>1</blue>
+          </color>
+         </gradientstop>
+        </gradient>
+       </brush>
+      </colorrole>
+     </disabled>
+    </palette>
+   </property>
+   <widget class="QMenu" name="fileMenu">
+    <property name="title">
+     <string>Файл</string>
+    </property>
+    <addaction name="newFieldAction"/>
+    <addaction name="openFieldAction"/>
+    <addaction name="saveFieldAction"/>
+   </widget>
+   <widget class="QMenu" name="helpMenu">
+    <property name="title">
+     <string>Справка</string>
+    </property>
+    <addaction name="docsAction"/>
+    <addaction name="aboutAction"/>
+   </widget>
+   <addaction name="fileMenu"/>
+   <addaction name="helpMenu"/>
+  </widget>
+  <action name="docsAction">
+   <property name="text">
+    <string>Документация</string>
+   </property>
+  </action>
+  <action name="aboutAction">
+   <property name="text">
+    <string>О программе</string>
+   </property>
+  </action>
+  <action name="newFieldAction">
+   <property name="text">
+    <string>Новое поле</string>
+   </property>
+  </action>
+  <action name="openFieldAction">
+   <property name="text">
+    <string>Открыть поле</string>
+   </property>
+  </action>
+  <action name="saveFieldAction">
+   <property name="text">
+    <string>Сохранить поле</string>
+   </property>
+  </action>
+ </widget>
+ <resources>
+  <include location="resource/res.qrc"/>
+ </resources>
+ <connections/>
+</ui>

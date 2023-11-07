@@ -1,0 +1,16 @@
+<RCC>
+  <qresource prefix="icons">
+    <file>icons/arrow_drop_down.svg</file>
+    <file>icons/arrow_drop_up.svg</file>
+    <file>icons/brush.svg</file>
+    <file>icons/fast_forward.svg</file>
+    <file>icons/fast_rewind.svg</file>
+    <file>icons/ink_eraser.svg</file>
+    <file>icons/palette.svg</file>
+    <file>icons/pause.svg</file>
+    <file>icons/play_arrow.svg</file>
+    <file>icons/skip_next.svg</file>
+    <file>icons/skip_previous.svg</file>
+    <file>icons/stop.svg</file>
+  </qresource>
+</RCC>
