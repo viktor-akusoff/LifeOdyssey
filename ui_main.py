@@ -177,9 +177,9 @@ class Ui_MainWindow(object):
 
         self.tools_layout.addWidget(self.playButton)
 
-        self.jumpForwarButton = QPushButton(self.horizontalFrame)
-        self.jumpForwarButton.setObjectName(u"jumpForwarButton")
-        self.jumpForwarButton.setStyleSheet(u"QPushButton{\n"
+        self.jumpForwardButton = QPushButton(self.horizontalFrame)
+        self.jumpForwardButton.setObjectName(u"jumpForwardButton")
+        self.jumpForwardButton.setStyleSheet(u"QPushButton{\n"
 "	padding: 5px;\n"
 "	background: rgba(0,0,0,0);\n"
 "}\n"
@@ -191,10 +191,10 @@ class Ui_MainWindow(object):
 "}")
         icon3 = QIcon()
         icon3.addFile(u":/icons/icons/skip_next.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.jumpForwarButton.setIcon(icon3)
-        self.jumpForwarButton.setIconSize(QSize(24, 24))
+        self.jumpForwardButton.setIcon(icon3)
+        self.jumpForwardButton.setIconSize(QSize(24, 24))
 
-        self.tools_layout.addWidget(self.jumpForwarButton)
+        self.tools_layout.addWidget(self.jumpForwardButton)
 
         self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
@@ -212,9 +212,9 @@ class Ui_MainWindow(object):
 
         self.tools_layout.addItem(self.horizontalSpacer_2)
 
-        self.palleteButton = QPushButton(self.horizontalFrame)
-        self.palleteButton.setObjectName(u"palleteButton")
-        self.palleteButton.setStyleSheet(u"QPushButton{\n"
+        self.paletteButton = QPushButton(self.horizontalFrame)
+        self.paletteButton.setObjectName(u"paletteButton")
+        self.paletteButton.setStyleSheet(u"QPushButton{\n"
 "	padding: 5px;\n"
 "	background: rgba(0,0,0,0);\n"
 "}\n"
@@ -226,10 +226,10 @@ class Ui_MainWindow(object):
 "}")
         icon4 = QIcon()
         icon4.addFile(u":/icons/icons/palette.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.palleteButton.setIcon(icon4)
-        self.palleteButton.setIconSize(QSize(24, 24))
+        self.paletteButton.setIcon(icon4)
+        self.paletteButton.setIconSize(QSize(24, 24))
 
-        self.tools_layout.addWidget(self.palleteButton)
+        self.tools_layout.addWidget(self.paletteButton)
 
         self.drawButton = QPushButton(self.horizontalFrame)
         self.drawButton.setObjectName(u"drawButton")
@@ -371,9 +371,9 @@ class Ui_MainWindow(object):
         self.jumpBackwardButton.setText("")
         self.stopButton.setText("")
         self.playButton.setText("")
-        self.jumpForwarButton.setText("")
+        self.jumpForwardButton.setText("")
         self.modeLabel.setText(QCoreApplication.translate("MainWindow", u"\u0420\u0435\u0436\u0438\u043c: \u0440\u0438\u0441\u043e\u0432\u0430\u043d\u0438\u0435", None))
-        self.palleteButton.setText("")
+        self.paletteButton.setText("")
         self.drawButton.setText("")
         self.eraseButton.setText("")
         self.fileMenu.setTitle(QCoreApplication.translate("MainWindow", u"\u0424\u0430\u0439\u043b", None))

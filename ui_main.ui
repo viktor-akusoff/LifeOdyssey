@@ -195,7 +195,7 @@ QPushButton:pressed {
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="jumpForwarButton">
+        <widget class="QPushButton" name="jumpForwardButton">
          <property name="styleSheet">
           <string notr="true">QPushButton{
 	padding: 5px;
@@ -262,7 +262,7 @@ background-color: rgba(0,0,0,0);
         </spacer>
        </item>
        <item>
-        <widget class="QPushButton" name="palleteButton">
+        <widget class="QPushButton" name="paletteButton">
          <property name="styleSheet">
           <string notr="true">QPushButton{
 	padding: 5px;
