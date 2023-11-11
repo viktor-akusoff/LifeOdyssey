@@ -2,7 +2,7 @@ import sys
 from enum import Enum
 from PySide6.QtCore import QSize, QTime, QTimer
 from PySide6.QtGui import QIcon
-from PySide6.QtWidgets import QApplication, QMainWindow
+from PySide6.QtWidgets import QApplication, QMainWindow, QColorDialog
 
 from ui_main import Ui_MainWindow
 
@@ -27,6 +27,7 @@ class LifeOdyssey(QMainWindow):
         self.is_playing = False
         self.mode = Mode.DRAWING
         self.prev_mode = None
+        self.draw_color = None
 
         stopButton = self.ui.stopButton
         stopButton.setCheckable(True)
@@ -104,7 +105,8 @@ class LifeOdyssey(QMainWindow):
             self.ui.frameSpinBox.setValue(99)
 
     def palette_button(self):
-        print("PALETTE")
+        color = QColorDialog.getColor()
+        self.draw_color = color
 
     def draw_button(self):
         self.stop_button()
