@@ -1,9 +1,14 @@
 import sys
 from enum import Enum
-from PySide6.QtCore import QSize, QTime, QTimer
+from PySide6.QtCore import QTime, QTimer
 from PySide6.QtGui import QIcon
-from PySide6.QtWidgets import QApplication, QMainWindow, QColorDialog
-
+from PySide6.QtWidgets import (
+    QApplication,
+    QMainWindow,
+    QColorDialog,
+    QGraphicsScene
+)
+from field import Cell
 from ui_main import Ui_MainWindow
 
 
@@ -18,8 +23,7 @@ class LifeOdyssey(QMainWindow):
         super(LifeOdyssey, self).__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
-        self.setFixedSize(QSize(800, 800))
-
+        self.showMaximized()
         self.iteration_number = 0
         self.curr_time = QTime(00, 00, 00)
         self.timer = QTimer()
@@ -28,6 +32,8 @@ class LifeOdyssey(QMainWindow):
         self.mode = Mode.DRAWING
         self.prev_mode = None
         self.draw_color = None
+
+        self.init_field(80, 80, 10)
 
         stopButton = self.ui.stopButton
         stopButton.setCheckable(True)
@@ -59,6 +65,18 @@ class LifeOdyssey(QMainWindow):
 
         frameSpinBox = self.ui.frameSpinBox
         frameSpinBox.valueChanged.connect(self.update_value)
+
+    def init_field(self, cols, rows, cell_size):
+        scene = QGraphicsScene()
+        width = cols * cell_size
+        height = rows * cell_size
+        for i in range(0, width, cell_size):
+            for j in range(0, height, cell_size):
+                rect = Cell(i, j, cell_size, cell_size)
+                scene.addItem(rect)
+        scene.mousePressEvent
+        self.ui.fieldGraphicsView.setScene(scene)
+        self.ui.fieldGraphicsView.show()
 
     def stop_button(self):
         self.stop_playing()
