@@ -66,7 +66,6 @@ class LifeOdyssey(QMainWindow):
             for j in range(0, height, cell_size):
                 rect = Cell(i, j, cell_size, cell_size, self.state_holder)
                 scene.addItem(rect)
-        scene.mousePressEvent
         self.ui.fieldGraphicsView.setScene(scene)
         self.ui.fieldGraphicsView.show()
 

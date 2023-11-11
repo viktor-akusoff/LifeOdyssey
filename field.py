@@ -1,6 +1,7 @@
 from enum import Enum
 from PySide6.QtGui import QColor
-from PySide6.QtWidgets import QGraphicsRectItem
+from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QGraphicsRectItem, QApplication
 
 
 class Mode(Enum):
@@ -37,6 +38,7 @@ class Cell(QGraphicsRectItem):
         self.state_holder = state_holder
         self.coord = (x, y)
         self.setBrush(QColor(255, 255, 255))
+        self.setAcceptHoverEvents(True)
 
     def mousePressEvent(self, event) -> None:
         if self.state_holder.mode == Mode.DRAWING:
@@ -44,3 +46,14 @@ class Cell(QGraphicsRectItem):
         elif self.state_holder.mode == Mode.ERASING:
             self.setBrush(QColor(255, 255, 255))
         return super().mousePressEvent(event)
+
+    def hoverEnterEvent(self, event) -> None:
+        if self.state_holder.mode == Mode.DRAWING:
+            QApplication.setOverrideCursor(Qt.PointingHandCursor)
+        elif self.state_holder.mode == Mode.ERASING:
+            QApplication.setOverrideCursor(Qt.CrossCursor)
+        return super().hoverEnterEvent(event)
+
+    def hoverLeaveEvent(self, event) -> None:
+        QApplication.setOverrideCursor(Qt.ArrowCursor)
+        return super().hoverLeaveEvent(event)
