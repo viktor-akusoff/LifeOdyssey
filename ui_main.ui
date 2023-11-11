@@ -263,30 +263,14 @@ background-color: rgba(0,0,0,0);
        </item>
        <item>
         <widget class="QPushButton" name="paletteButton">
-         <property name="styleSheet">
-          <string notr="true">QPushButton{
-	padding: 5px;
-	background: rgba(0,0,0,0);
-}
-QPushButton:hover {
-	background-color: #f7b801;
-}
-QPushButton:pressed {
-	background-color: #f35b04;
-}</string>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
          </property>
          <property name="text">
           <string/>
-         </property>
-         <property name="icon">
-          <iconset resource="resource/res.qrc">
-           <normaloff>:/icons/icons/palette.svg</normaloff>:/icons/icons/palette.svg</iconset>
-         </property>
-         <property name="iconSize">
-          <size>
-           <width>24</width>
-           <height>24</height>
-          </size>
          </property>
         </widget>
        </item>

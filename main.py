@@ -5,7 +5,7 @@ from PySide6.QtWidgets import (
     QApplication,
     QMainWindow,
     QColorDialog,
-    QGraphicsScene
+    QGraphicsScene,
 )
 from field import Cell, StateHolder, Mode
 from ui_main import Ui_MainWindow
@@ -26,6 +26,10 @@ class LifeOdyssey(QMainWindow):
         self.draw_color = None
 
         self.init_field(80, 80, 10)
+
+        self.ui.paletteButton.setStyleSheet(
+            'QPushButton {background-color: black;}'
+        )
 
         stopButton = self.ui.stopButton
         stopButton.setCheckable(True)
@@ -115,6 +119,10 @@ class LifeOdyssey(QMainWindow):
 
     def palette_button(self):
         color = QColorDialog.getColor()
+        rgb_color = color.name()
+        self.ui.paletteButton.setStyleSheet(
+            f'QPushButton {{background-color: {rgb_color};}}'
+        )
         self.state_holder.set_color(color)
 
     def draw_button(self):

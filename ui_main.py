@@ -214,20 +214,11 @@ class Ui_MainWindow(object):
 
         self.paletteButton = QPushButton(self.horizontalFrame)
         self.paletteButton.setObjectName(u"paletteButton")
-        self.paletteButton.setStyleSheet(u"QPushButton{\n"
-"	padding: 5px;\n"
-"	background: rgba(0,0,0,0);\n"
-"}\n"
-"QPushButton:hover {\n"
-"	background-color: #f7b801;\n"
-"}\n"
-"QPushButton:pressed {\n"
-"	background-color: #f35b04;\n"
-"}")
-        icon4 = QIcon()
-        icon4.addFile(u":/icons/icons/palette.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.paletteButton.setIcon(icon4)
-        self.paletteButton.setIconSize(QSize(24, 24))
+        sizePolicy = QSizePolicy(QSizePolicy.Maximum, QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.paletteButton.sizePolicy().hasHeightForWidth())
+        self.paletteButton.setSizePolicy(sizePolicy)
 
         self.tools_layout.addWidget(self.paletteButton)
 
@@ -243,9 +234,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "	background-color: #f35b04;\n"
 "}")
-        icon5 = QIcon()
-        icon5.addFile(u":/icons/icons/brush.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.drawButton.setIcon(icon5)
+        icon4 = QIcon()
+        icon4.addFile(u":/icons/icons/brush.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.drawButton.setIcon(icon4)
         self.drawButton.setIconSize(QSize(24, 24))
 
         self.tools_layout.addWidget(self.drawButton)
@@ -262,9 +253,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "	background-color: #f35b04;\n"
 "}")
-        icon6 = QIcon()
-        icon6.addFile(u":/icons/icons/ink_eraser.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.eraseButton.setIcon(icon6)
+        icon5 = QIcon()
+        icon5.addFile(u":/icons/icons/ink_eraser.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.eraseButton.setIcon(icon5)
         self.eraseButton.setIconSize(QSize(24, 24))
 
         self.tools_layout.addWidget(self.eraseButton)
