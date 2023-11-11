@@ -1,5 +1,4 @@
 import sys
-from enum import Enum
 from PySide6.QtCore import QTime, QTimer
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import (
@@ -8,19 +7,14 @@ from PySide6.QtWidgets import (
     QColorDialog,
     QGraphicsScene
 )
-from field import Cell
+from field import Cell, StateHolder, Mode
 from ui_main import Ui_MainWindow
-
-
-class Mode(Enum):
-    DRAWING = 1
-    ERASING = 2
-    PLAYING = 3
 
 
 class LifeOdyssey(QMainWindow):
     def __init__(self):
         super(LifeOdyssey, self).__init__()
+        self.state_holder = StateHolder()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.showMaximized()
@@ -29,8 +23,6 @@ class LifeOdyssey(QMainWindow):
         self.timer = QTimer()
         self.timer.timeout.connect(self.next_iteration)
         self.is_playing = False
-        self.mode = Mode.DRAWING
-        self.prev_mode = None
         self.draw_color = None
 
         self.init_field(80, 80, 10)
@@ -72,7 +64,7 @@ class LifeOdyssey(QMainWindow):
         height = rows * cell_size
         for i in range(0, width, cell_size):
             for j in range(0, height, cell_size):
-                rect = Cell(i, j, cell_size, cell_size)
+                rect = Cell(i, j, cell_size, cell_size, self.state_holder)
                 scene.addItem(rect)
         scene.mousePressEvent
         self.ui.fieldGraphicsView.setScene(scene)
@@ -85,7 +77,7 @@ class LifeOdyssey(QMainWindow):
         self.update_mode_indicator()
 
     def set_play_mode(self):
-        if self.mode != Mode.PLAYING:
+        if self.state_holder.mode != Mode.PLAYING:
             self.switch_mode(Mode.PLAYING)
 
     def play_button(self):
@@ -124,7 +116,7 @@ class LifeOdyssey(QMainWindow):
 
     def palette_button(self):
         color = QColorDialog.getColor()
-        self.draw_color = color
+        self.state_holder.set_color(color)
 
     def draw_button(self):
         self.stop_button()
@@ -137,7 +129,7 @@ class LifeOdyssey(QMainWindow):
         self.update_mode_indicator()
 
     def update_value(self):
-        if self.mode != Mode.PLAYING:
+        if self.state_holder.mode != Mode.PLAYING:
             self.switch_mode(Mode.PLAYING)
         self.iteration_number = self.ui.frameSpinBox.value()
 
@@ -148,22 +140,21 @@ class LifeOdyssey(QMainWindow):
             self.ui.frameSpinBox.setValue(0)
 
     def update_mode_indicator(self):
-        if self.mode == Mode.DRAWING:
+        mode = self.state_holder.mode
+        if mode == Mode.DRAWING:
             self.ui.modeLabel.setText("Режим: рисование")
-        elif self.mode == Mode.ERASING:
+        elif mode == Mode.ERASING:
             self.ui.modeLabel.setText("Режим: стирание")
-        elif self.mode == Mode.PLAYING:
+        elif mode == Mode.PLAYING:
             self.ui.modeLabel.setText("Режим: проигрывание")
 
     def switch_mode(self, mode):
-        if self.mode != mode:
-            self.prev_mode = self.mode
-            self.mode = mode
-            self.update_mode_indicator()
+        self.state_holder.switch_mode(mode)
+        self.update_mode_indicator()
 
     def restore_mode(self):
-        if self.mode == Mode.PLAYING:
-            self.mode, self.prev_mode = self.prev_mode, self.mode
+        self.state_holder.restore_mode()
+        self.update_mode_indicator()
 
 
 if __name__ == "__main__":
