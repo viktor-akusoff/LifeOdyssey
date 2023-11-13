@@ -4,10 +4,9 @@ from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import (
     QApplication,
     QMainWindow,
-    QColorDialog,
-    QGraphicsScene,
+    QColorDialog
 )
-from field import Cell, StateHolder, Mode
+from field import Cell, StateHolder, Mode, Field
 from ui_main import Ui_MainWindow
 
 
@@ -63,7 +62,7 @@ class LifeOdyssey(QMainWindow):
         frameSpinBox.valueChanged.connect(self.update_value)
 
     def init_field(self, cols, rows, cell_size):
-        scene = QGraphicsScene()
+        scene = Field()
         width = cols * cell_size
         height = rows * cell_size
         for i in range(0, width, cell_size):

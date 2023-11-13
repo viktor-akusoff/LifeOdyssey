@@ -1,7 +1,7 @@
 from enum import Enum
-from PySide6.QtGui import QColor
+from PySide6.QtGui import QColor, QTransform
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QGraphicsRectItem, QApplication
+from PySide6.QtWidgets import QGraphicsRectItem, QApplication, QGraphicsScene
 
 
 class Mode(Enum):
@@ -30,6 +30,16 @@ class StateHolder:
         self.color = color
 
 
+class Field(QGraphicsScene):
+
+    def mouseMoveEvent(self, event) -> None:
+        button = event.buttons()
+        obj = self.itemAt(event.scenePos(), QTransform())
+        if obj is not None and button == Qt.LeftButton:
+            obj.mouseDrawEvent(event)
+        return super().mouseMoveEvent(event)
+
+
 class Cell(QGraphicsRectItem):
 
     def __init__(self, x, y, w, h, state_holder):
@@ -40,7 +50,7 @@ class Cell(QGraphicsRectItem):
         self.setBrush(QColor(255, 255, 255))
         self.setAcceptHoverEvents(True)
 
-    def mousePressEvent(self, event) -> None:
+    def mouseDrawEvent(self, event) -> None:
         if self.state_holder.mode == Mode.DRAWING:
             self.setBrush(self.state_holder.color)
         elif self.state_holder.mode == Mode.ERASING:
