@@ -1,8 +1,14 @@
 import numpy as np
+import operator
 from enum import Enum
 from PySide6.QtGui import QColor, QTransform
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QGraphicsRectItem, QApplication, QGraphicsScene
+from PySide6.QtWidgets import (
+    QGraphicsRectItem,
+    QApplication,
+    QGraphicsScene,
+    QProgressDialog
+)
 
 
 class Mode(Enum):
@@ -44,34 +50,58 @@ class StateHolder:
         square = np.sum(field[min_x:max_x+1, min_y:max_y+1], axis=2)
         return np.count_nonzero(square - 765) - central_cell
 
-    def calc_cell(self, k, x, y):
+    def calc_cell(self, k, x, y, h, w):
         field = self.field[k]
         is_alive = False if np.sum(field[x][y]) == 765 else True
-        h = len(field) - 1
-        w = len(field[0]) - 1
         min_x = max(x-1, 0)
         min_y = max(y-1, 0)
         max_x = min(x+1, w)
         max_y = min(y+1, h)
+        slc = field[min_x:max_x+1, min_y:max_y+1]
         square = np.sum(field[min_x:max_x+1, min_y:max_y+1], axis=2)
         neighbors = np.count_nonzero(square - 765) - int(is_alive)
-        if is_alive and neighbors in (2, 3):
-            return QColor(0, 0, 0)
-        if not is_alive and neighbors == 3:
-            return QColor(0, 0, 0)
+        colors_dict = {}
+        for iy, ix in np.ndindex(square.shape):
+            color_key = str(slc[iy, ix])
+            if color_key == '[255. 255. 255.]':
+                continue
+            if color_key not in colors_dict.keys():
+                colors_dict[color_key] = 0
+            colors_dict[color_key] += 1
+        if (
+            (is_alive and neighbors in (2, 3)) or
+            (not is_alive and neighbors == 3)
+        ):
+            most_frequent_color_k = max(
+                colors_dict.items(),
+                key=operator.itemgetter(1)
+            )[0]
+            most_frequent_color_s = most_frequent_color_k[1:-1].split('.')[:-1]
+            most_frequent_color = [
+                int(element) for element in most_frequent_color_s
+            ]
+            return QColor(*most_frequent_color)
         return QColor(255, 255, 255)
 
-    def calc_steps(self):
-        h = len(self.field[0]) - 1
-        w = len(self.field[0][0]) - 1
+    def calcSteps(self):
+        progress = QProgressDialog('Просчитывание итераций', 'Стоп', 1, 100)
+        progress.setWindowTitle('Life Odyssey')
+        progress.setWindowModality(Qt.WindowModality.WindowModal)
+        w = len(self.field[0]) - 1
+        h = len(self.field[0][0]) - 1
         for k in range(1, 100):
-            for i in range(0, h-1):
-                for j in range(0, w-1):
+            progress.setValue(k)
+            for i in range(0, w-1):
+                for j in range(0, h-1):
                     self.field[k][i][j] = self.calc_cell(
                         k-1,
                         i,
-                        j
+                        j,
+                        h,
+                        w,
                     ).toTuple()[:-1]  # type: ignore
+            if progress.wasCanceled():
+                break
 
 
 class Field(QGraphicsScene):

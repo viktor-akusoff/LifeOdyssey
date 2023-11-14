@@ -230,7 +230,7 @@ class LifeOdyssey(QMainWindow):
             self.initField()
 
     def calcField(self):
-        self.state_holder.calc_steps()
+        self.state_holder.calcSteps()
 
     def cleanField(self):
         self.state_holder.field[0] = 255
