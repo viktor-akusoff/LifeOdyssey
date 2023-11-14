@@ -2,15 +2,28 @@ import sys
 import numpy as np
 from pathlib import Path
 from PySide6.QtCore import QTime, QTimer
-from PySide6.QtGui import QIcon
+from PySide6.QtGui import QIcon, QIntValidator
 from PySide6.QtWidgets import (
     QApplication,
     QMainWindow,
+    QDialog,
     QColorDialog,
-    QFileDialog
+    QFileDialog,
 )
 from field import Cell, StateHolder, Mode, Field
 from ui_main import Ui_MainWindow
+from ui_create import Ui_createDialog
+
+
+class CreateDialog(QDialog):
+    def __init__(self):
+        super(CreateDialog, self).__init__()
+        self.ui = Ui_createDialog()
+        self.ui.setupUi(self)
+        self.ui.lineWidth.setText('80')
+        self.ui.lineHeight.setText('80')
+        self.ui.lineHeight.setValidator(QIntValidator(0, 200))
+        self.ui.lineWidth.setValidator(QIntValidator(0, 200))
 
 
 class LifeOdyssey(QMainWindow):
@@ -69,6 +82,9 @@ class LifeOdyssey(QMainWindow):
 
         openFieldAction = self.ui.openFieldAction
         openFieldAction.triggered.connect(self.openField)
+        
+        newFieldAction = self.ui.newFieldAction
+        newFieldAction.triggered.connect(self.newField)
 
     def init_field(self):
         scene = Field()
@@ -179,6 +195,7 @@ class LifeOdyssey(QMainWindow):
             "Бинарный файл NumPy (*.npy)"
         )
         data = self.state_holder.field
+        self.setWindowTitle(f'Life Odyssey - {address}')
         np.save(address, data)
 
     def openField(self):
@@ -189,7 +206,17 @@ class LifeOdyssey(QMainWindow):
             "Бинарный файл NumPy (*.npy)"
         )
         self.state_holder.field = np.load(address)
+        self.setWindowTitle(f'Life Odyssey - {address}')
         self.init_field()
+
+    def newField(self):
+        dialog = CreateDialog()
+        if dialog.exec():
+            w = int(dialog.ui.lineWidth.text())
+            h = int(dialog.ui.lineHeight.text())
+            self.state_holder = StateHolder(w, h)
+            self.setWindowTitle('Life Odyssey - Новое поле')
+            self.init_field()
 
 
 if __name__ == "__main__":
