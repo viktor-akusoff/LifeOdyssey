@@ -1,3 +1,4 @@
+import numpy as np
 from enum import Enum
 from PySide6.QtGui import QColor, QTransform
 from PySide6.QtCore import Qt
@@ -12,10 +13,11 @@ class Mode(Enum):
 
 class StateHolder:
 
-    def __init__(self) -> None:
+    def __init__(self, width=80, height=80) -> None:
         self.mode = Mode.DRAWING
         self.prev_mode = None
         self.color = QColor(0, 0, 0)
+        self.field = np.zeros(shape=(width, height, 3)) + 255
 
     def switch_mode(self, mode):
         if self.mode != mode:
@@ -44,17 +46,22 @@ class Cell(QGraphicsRectItem):
 
     def __init__(self, x, y, w, h, state_holder):
         super().__init__(0, 0, w, h)
-        self.setPos(x, y)
+        self.setPos(x * w, y * h)
         self.state_holder = state_holder
         self.coord = (x, y)
-        self.setBrush(QColor(255, 255, 255))
+        color = self.state_holder.field[x][y].tolist()
+        self.setBrush(QColor(*color))
         self.setAcceptHoverEvents(True)
 
     def mouseDrawEvent(self, event) -> None:
+        color = QColor()
         if self.state_holder.mode == Mode.DRAWING:
-            self.setBrush(self.state_holder.color)
+            color = self.state_holder.color
         elif self.state_holder.mode == Mode.ERASING:
-            self.setBrush(QColor(255, 255, 255))
+            color = QColor(255, 255, 255)
+        x, y = self.coord
+        self.state_holder.field[x][y] = np.array(color.toTuple())[:-1]
+        self.setBrush(color)
         return super().mousePressEvent(event)
 
     def hoverEnterEvent(self, event) -> None:

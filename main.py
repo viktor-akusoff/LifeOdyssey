@@ -1,10 +1,13 @@
 import sys
+import numpy as np
+from pathlib import Path
 from PySide6.QtCore import QTime, QTimer
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import (
     QApplication,
     QMainWindow,
-    QColorDialog
+    QColorDialog,
+    QFileDialog
 )
 from field import Cell, StateHolder, Mode, Field
 from ui_main import Ui_MainWindow
@@ -24,7 +27,7 @@ class LifeOdyssey(QMainWindow):
         self.is_playing = False
         self.draw_color = None
 
-        self.init_field(80, 80, 10)
+        self.init_field()
 
         self.ui.paletteButton.setStyleSheet(
             'QPushButton {background-color: black;}'
@@ -61,13 +64,19 @@ class LifeOdyssey(QMainWindow):
         frameSpinBox = self.ui.frameSpinBox
         frameSpinBox.valueChanged.connect(self.update_value)
 
-    def init_field(self, cols, rows, cell_size):
+        saveFieldAction = self.ui.saveFieldAction
+        saveFieldAction.triggered.connect(self.saveField)
+
+        openFieldAction = self.ui.openFieldAction
+        openFieldAction.triggered.connect(self.openField)
+
+    def init_field(self):
         scene = Field()
-        width = cols * cell_size
-        height = rows * cell_size
-        for i in range(0, width, cell_size):
-            for j in range(0, height, cell_size):
-                rect = Cell(i, j, cell_size, cell_size, self.state_holder)
+        rows = len(self.state_holder.field)
+        cols = len(self.state_holder.field[0])
+        for i in range(0, rows-1):
+            for j in range(0, cols-1):
+                rect = Cell(i, j, 10, 10, self.state_holder)
                 scene.addItem(rect)
         self.ui.fieldGraphicsView.setScene(scene)
         self.ui.fieldGraphicsView.show()
@@ -161,6 +170,26 @@ class LifeOdyssey(QMainWindow):
     def restore_mode(self):
         self.state_holder.restore_mode()
         self.update_mode_indicator()
+
+    def saveField(self):
+        address, _ = QFileDialog.getSaveFileName(
+            None,  # type: ignore
+            "Сохранить поле",
+            str(Path.home()),
+            "Бинарный файл NumPy (*.npy)"
+        )
+        data = self.state_holder.field
+        np.save(address, data)
+
+    def openField(self):
+        address, _ = QFileDialog.getOpenFileName(
+            None,  # type: ignore
+            "Открыть поле",
+            str(Path.home()),
+            "Бинарный файл NumPy (*.npy)"
+        )
+        self.state_holder.field = np.load(address)
+        self.init_field()
 
 
 if __name__ == "__main__":
