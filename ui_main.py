@@ -26,7 +26,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(800, 607)
+        MainWindow.resize(800, 633)
         palette = QPalette()
         MainWindow.setPalette(palette)
         MainWindow.setContextMenuPolicy(Qt.NoContextMenu)
@@ -56,6 +56,10 @@ class Ui_MainWindow(object):
         self.openFieldAction.setObjectName(u"openFieldAction")
         self.saveFieldAction = QAction(MainWindow)
         self.saveFieldAction.setObjectName(u"saveFieldAction")
+        self.cleanFieldAction = QAction(MainWindow)
+        self.cleanFieldAction.setObjectName(u"cleanFieldAction")
+        self.calcFieldAction = QAction(MainWindow)
+        self.calcFieldAction.setObjectName(u"calcFieldAction")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.centralwidget.setStyleSheet(u"background:qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0  #3d348b, stop:1 #7678ed);\n"
@@ -337,15 +341,20 @@ class Ui_MainWindow(object):
         self.fileMenu.setObjectName(u"fileMenu")
         self.helpMenu = QMenu(self.menuBar)
         self.helpMenu.setObjectName(u"helpMenu")
+        self.editMenu = QMenu(self.menuBar)
+        self.editMenu.setObjectName(u"editMenu")
         MainWindow.setMenuBar(self.menuBar)
 
         self.menuBar.addAction(self.fileMenu.menuAction())
+        self.menuBar.addAction(self.editMenu.menuAction())
         self.menuBar.addAction(self.helpMenu.menuAction())
         self.fileMenu.addAction(self.newFieldAction)
         self.fileMenu.addAction(self.openFieldAction)
         self.fileMenu.addAction(self.saveFieldAction)
         self.helpMenu.addAction(self.docsAction)
         self.helpMenu.addAction(self.aboutAction)
+        self.editMenu.addAction(self.cleanFieldAction)
+        self.editMenu.addAction(self.calcFieldAction)
 
         self.retranslateUi(MainWindow)
 
@@ -359,6 +368,8 @@ class Ui_MainWindow(object):
         self.newFieldAction.setText(QCoreApplication.translate("MainWindow", u"\u041d\u043e\u0432\u043e\u0435 \u043f\u043e\u043b\u0435", None))
         self.openFieldAction.setText(QCoreApplication.translate("MainWindow", u"\u041e\u0442\u043a\u0440\u044b\u0442\u044c \u043f\u043e\u043b\u0435", None))
         self.saveFieldAction.setText(QCoreApplication.translate("MainWindow", u"\u0421\u043e\u0445\u0440\u0430\u043d\u0438\u0442\u044c \u043f\u043e\u043b\u0435", None))
+        self.cleanFieldAction.setText(QCoreApplication.translate("MainWindow", u"\u041e\u0447\u0438\u0441\u0442\u0438\u0442\u044c \u043f\u043e\u043b\u0435", None))
+        self.calcFieldAction.setText(QCoreApplication.translate("MainWindow", u"\u041f\u043e\u0441\u0447\u0438\u0442\u0430\u0442\u044c \u0438\u0442\u0435\u0440\u0430\u0446\u0438\u0438", None))
         self.jumpBackwardButton.setText("")
         self.stopButton.setText("")
         self.playButton.setText("")
@@ -369,5 +380,6 @@ class Ui_MainWindow(object):
         self.eraseButton.setText("")
         self.fileMenu.setTitle(QCoreApplication.translate("MainWindow", u"\u0424\u0430\u0439\u043b", None))
         self.helpMenu.setTitle(QCoreApplication.translate("MainWindow", u"\u0421\u043f\u0440\u0430\u0432\u043a\u0430", None))
+        self.editMenu.setTitle(QCoreApplication.translate("MainWindow", u"\u041f\u0440\u0430\u0432\u043a\u0430", None))
     # retranslateUi
 

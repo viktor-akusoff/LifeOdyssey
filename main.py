@@ -36,11 +36,11 @@ class LifeOdyssey(QMainWindow):
         self.iteration_number = 0
         self.curr_time = QTime(00, 00, 00)
         self.timer = QTimer()
-        self.timer.timeout.connect(self.next_iteration)
+        self.timer.timeout.connect(self.nextIteration)
         self.is_playing = False
         self.draw_color = None
 
-        self.init_field()
+        self.initField()
 
         self.ui.paletteButton.setStyleSheet(
             'QPushButton {background-color: black;}'
@@ -75,24 +75,30 @@ class LifeOdyssey(QMainWindow):
         eraseButton.clicked.connect(self.erase_button)
 
         frameSpinBox = self.ui.frameSpinBox
-        frameSpinBox.valueChanged.connect(self.update_value)
+        frameSpinBox.valueChanged.connect(self.updateValue)
 
         saveFieldAction = self.ui.saveFieldAction
         saveFieldAction.triggered.connect(self.saveField)
 
         openFieldAction = self.ui.openFieldAction
         openFieldAction.triggered.connect(self.openField)
-        
+
         newFieldAction = self.ui.newFieldAction
         newFieldAction.triggered.connect(self.newField)
 
-    def init_field(self):
+        calcFieldAction = self.ui.calcFieldAction
+        calcFieldAction.triggered.connect(self.calcField)
+
+        cleanFieldAction = self.ui.cleanFieldAction
+        cleanFieldAction.triggered.connect(self.cleanField)
+
+    def initField(self, k=0):
         scene = Field()
-        rows = len(self.state_holder.field)
-        cols = len(self.state_holder.field[0])
+        rows = len(self.state_holder.field[k])
+        cols = len(self.state_holder.field[k][0])
         for i in range(0, rows-1):
             for j in range(0, cols-1):
-                rect = Cell(i, j, 10, 10, self.state_holder)
+                rect = Cell(i, j, 10, 10, self.state_holder, k)
                 scene.addItem(rect)
         self.ui.fieldGraphicsView.setScene(scene)
         self.ui.fieldGraphicsView.show()
@@ -100,15 +106,15 @@ class LifeOdyssey(QMainWindow):
     def stop_button(self):
         self.stop_playing()
         self.ui.frameSpinBox.setValue(0)
-        self.restore_mode()
-        self.update_mode_indicator()
+        self.restoreMode()
+        self.updateModeIndicator()
 
     def set_play_mode(self):
         if self.state_holder.mode != Mode.PLAYING:
-            self.switch_mode(Mode.PLAYING)
+            self.switchMode(Mode.PLAYING)
 
     def play_button(self):
-        self.switch_mode(Mode.PLAYING)
+        self.switchMode(Mode.PLAYING)
         if self.is_playing:
             self.stop_playing()
             return
@@ -147,30 +153,31 @@ class LifeOdyssey(QMainWindow):
         self.ui.paletteButton.setStyleSheet(
             f'QPushButton {{background-color: {rgb_color};}}'
         )
-        self.state_holder.set_color(color)
+        self.state_holder.setColor(color)
 
     def draw_button(self):
         self.stop_button()
-        self.switch_mode(Mode.DRAWING)
-        self.update_mode_indicator()
+        self.switchMode(Mode.DRAWING)
+        self.updateModeIndicator()
 
     def erase_button(self):
         self.stop_button()
-        self.switch_mode(Mode.ERASING)
-        self.update_mode_indicator()
+        self.switchMode(Mode.ERASING)
+        self.updateModeIndicator()
 
-    def update_value(self):
+    def updateValue(self):
         if self.state_holder.mode != Mode.PLAYING:
-            self.switch_mode(Mode.PLAYING)
+            self.switchMode(Mode.PLAYING)
         self.iteration_number = self.ui.frameSpinBox.value()
+        self.initField(self.iteration_number)
 
-    def next_iteration(self):
+    def nextIteration(self):
         self.curr_time = self.curr_time.addSecs(1)
         old_val = self.move_spinbox(1)
         if old_val == 99:
             self.ui.frameSpinBox.setValue(0)
 
-    def update_mode_indicator(self):
+    def updateModeIndicator(self):
         mode = self.state_holder.mode
         if mode == Mode.DRAWING:
             self.ui.modeLabel.setText("Режим: рисование")
@@ -179,13 +186,13 @@ class LifeOdyssey(QMainWindow):
         elif mode == Mode.PLAYING:
             self.ui.modeLabel.setText("Режим: проигрывание")
 
-    def switch_mode(self, mode):
-        self.state_holder.switch_mode(mode)
-        self.update_mode_indicator()
+    def switchMode(self, mode):
+        self.state_holder.switchMode(mode)
+        self.updateModeIndicator()
 
-    def restore_mode(self):
-        self.state_holder.restore_mode()
-        self.update_mode_indicator()
+    def restoreMode(self):
+        self.state_holder.restoreMode()
+        self.updateModeIndicator()
 
     def saveField(self):
         address, _ = QFileDialog.getSaveFileName(
@@ -194,7 +201,7 @@ class LifeOdyssey(QMainWindow):
             str(Path.home()),
             "Бинарный файл NumPy (*.npy)"
         )
-        data = self.state_holder.field
+        data = self.state_holder.field[0]
         self.setWindowTitle(f'Life Odyssey - {address}')
         np.save(address, data)
 
@@ -205,9 +212,13 @@ class LifeOdyssey(QMainWindow):
             str(Path.home()),
             "Бинарный файл NumPy (*.npy)"
         )
-        self.state_holder.field = np.load(address)
+        data = np.load(address)
+        h = len(data)
+        w = len(data[0])
+        self.state_holder.field = np.zeros(shape=(100, h, w, 3)) + 255
+        self.state_holder.field[0] = data
         self.setWindowTitle(f'Life Odyssey - {address}')
-        self.init_field()
+        self.initField()
 
     def newField(self):
         dialog = CreateDialog()
@@ -216,7 +227,14 @@ class LifeOdyssey(QMainWindow):
             h = int(dialog.ui.lineHeight.text())
             self.state_holder = StateHolder(w, h)
             self.setWindowTitle('Life Odyssey - Новое поле')
-            self.init_field()
+            self.initField()
+
+    def calcField(self):
+        self.state_holder.calc_steps()
+
+    def cleanField(self):
+        self.state_holder.field[0] = 255
+        self.initField()
 
 
 if __name__ == "__main__":

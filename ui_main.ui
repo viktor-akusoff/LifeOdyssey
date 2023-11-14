@@ -554,7 +554,15 @@ QPushButton:pressed {
     <addaction name="docsAction"/>
     <addaction name="aboutAction"/>
    </widget>
+   <widget class="QMenu" name="editMenu">
+    <property name="title">
+     <string>Правка</string>
+    </property>
+    <addaction name="cleanFieldAction"/>
+    <addaction name="calcFieldAction"/>
+   </widget>
    <addaction name="fileMenu"/>
+   <addaction name="editMenu"/>
    <addaction name="helpMenu"/>
   </widget>
   <action name="docsAction">
@@ -580,6 +588,16 @@ QPushButton:pressed {
   <action name="saveFieldAction">
    <property name="text">
     <string>Сохранить поле</string>
+   </property>
+  </action>
+  <action name="cleanFieldAction">
+   <property name="text">
+    <string>Очистить поле</string>
+   </property>
+  </action>
+  <action name="calcFieldAction">
+   <property name="text">
+    <string>Посчитать итерации</string>
    </property>
   </action>
  </widget>
