@@ -48,31 +48,31 @@ class LifeOdyssey(QMainWindow):
 
         stopButton = self.ui.stopButton
         stopButton.setCheckable(True)
-        stopButton.clicked.connect(self.stop_button)
+        stopButton.clicked.connect(self.stopButton)
 
         playButton = self.ui.playButton
         playButton.setCheckable(True)
-        playButton.clicked.connect(self.play_button)
+        playButton.clicked.connect(self.playButton)
 
         jumpForwardButton = self.ui.jumpForwardButton
         jumpForwardButton.setCheckable(True)
-        jumpForwardButton.clicked.connect(self.jump_forward_button)
+        jumpForwardButton.clicked.connect(self.jumpForwardButton)
 
         jumpBackwardButton = self.ui.jumpBackwardButton
         jumpBackwardButton.setCheckable(True)
-        jumpBackwardButton.clicked.connect(self.jump_backward_button)
+        jumpBackwardButton.clicked.connect(self.jumpBackwardButton)
 
         paletteButton = self.ui.paletteButton
         paletteButton.setCheckable(True)
-        paletteButton.clicked.connect(self.palette_button)
+        paletteButton.clicked.connect(self.paletteButton)
 
         drawButton = self.ui.drawButton
         drawButton.setCheckable(True)
-        drawButton.clicked.connect(self.draw_button)
+        drawButton.clicked.connect(self.drawButton)
 
         eraseButton = self.ui.eraseButton
         eraseButton.setCheckable(True)
-        eraseButton.clicked.connect(self.erase_button)
+        eraseButton.clicked.connect(self.eraseButton)
 
         frameSpinBox = self.ui.frameSpinBox
         frameSpinBox.valueChanged.connect(self.updateValue)
@@ -103,51 +103,51 @@ class LifeOdyssey(QMainWindow):
         self.ui.fieldGraphicsView.setScene(scene)
         self.ui.fieldGraphicsView.show()
 
-    def stop_button(self):
-        self.stop_playing()
+    def stopButton(self):
+        self.stopPlaying()
         self.ui.frameSpinBox.setValue(0)
         self.restoreMode()
         self.updateModeIndicator()
 
-    def set_play_mode(self):
+    def setPlayMode(self):
         if self.state_holder.mode != Mode.PLAYING:
             self.switchMode(Mode.PLAYING)
 
-    def play_button(self):
+    def playButton(self):
         self.switchMode(Mode.PLAYING)
         if self.is_playing:
-            self.stop_playing()
+            self.stopPlaying()
             return
-        self.start_playing()
+        self.startPlaying()
 
-    def start_playing(self):
+    def startPlaying(self):
         self.is_playing = True
         self.timer.start(250)
         self.ui.playButton.setIcon(QIcon(u":/icons/icons/pause.svg"))
 
-    def stop_playing(self):
+    def stopPlaying(self):
         self.is_playing = False
         self.timer.stop()
         self.ui.playButton.setIcon(QIcon(u":/icons/icons/play_arrow.svg"))
 
-    def move_spinbox(self, num):
+    def moveSpinbox(self, num):
         old_val = self.ui.frameSpinBox.value()
         self.ui.frameSpinBox.setValue(old_val + num)
         return old_val
 
-    def jump_forward_button(self):
-        self.set_play_mode()
-        old_val = self.move_spinbox(5)
+    def jumpForwardButton(self):
+        self.setPlayMode()
+        old_val = self.moveSpinbox(5)
         if old_val > 94:
             self.ui.frameSpinBox.setValue(0)
 
-    def jump_backward_button(self):
-        self.set_play_mode()
-        old_val = self.move_spinbox(-5)
+    def jumpBackwardButton(self):
+        self.setPlayMode()
+        old_val = self.moveSpinbox(-5)
         if old_val < 5:
             self.ui.frameSpinBox.setValue(99)
 
-    def palette_button(self):
+    def paletteButton(self):
         color = QColorDialog.getColor()
         rgb_color = color.name()
         self.ui.paletteButton.setStyleSheet(
@@ -155,13 +155,13 @@ class LifeOdyssey(QMainWindow):
         )
         self.state_holder.setColor(color)
 
-    def draw_button(self):
-        self.stop_button()
+    def drawButton(self):
+        self.stopButton()
         self.switchMode(Mode.DRAWING)
         self.updateModeIndicator()
 
-    def erase_button(self):
-        self.stop_button()
+    def eraseButton(self):
+        self.stopButton()
         self.switchMode(Mode.ERASING)
         self.updateModeIndicator()
 
@@ -173,7 +173,7 @@ class LifeOdyssey(QMainWindow):
 
     def nextIteration(self):
         self.curr_time = self.curr_time.addSecs(1)
-        old_val = self.move_spinbox(1)
+        old_val = self.moveSpinbox(1)
         if old_val == 99:
             self.ui.frameSpinBox.setValue(0)
 

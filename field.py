@@ -39,7 +39,7 @@ class StateHolder:
         self.color = color
 
     @staticmethod
-    def count_living_neighbors(field, x, y):
+    def countLivingNeighbors(field, x, y):
         h = len(field) - 1
         w = len(field[0]) - 1
         central_cell = 0 if np.sum(field[x][y]) == 765 else 1
@@ -50,7 +50,7 @@ class StateHolder:
         square = np.sum(field[min_x:max_x+1, min_y:max_y+1], axis=2)
         return np.count_nonzero(square - 765) - central_cell
 
-    def calc_cell(self, k, x, y, h, w):
+    def calcCell(self, k, x, y, h, w):
         field = self.field[k]
         is_alive = False if np.sum(field[x][y]) == 765 else True
         min_x = max(x-1, 0)
@@ -93,7 +93,7 @@ class StateHolder:
             progress.setValue(k)
             for i in range(0, w-1):
                 for j in range(0, h-1):
-                    self.field[k][i][j] = self.calc_cell(
+                    self.field[k][i][j] = self.calcCell(
                         k-1,
                         i,
                         j,
