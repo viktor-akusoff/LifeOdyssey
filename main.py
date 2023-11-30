@@ -225,7 +225,6 @@ class LifeOdyssey(QMainWindow):
             w = int(dialog.ui.lineWidth.text())
             h = int(dialog.ui.lineHeight.text())
             frames = int(dialog.ui.framesNumberSpinBox.value())
-            print(frames)
             self.state_holder = StateHolder(w, h, frames)
             self.setWindowTitle('Life Odyssey - Новое поле')
             self.initField()
