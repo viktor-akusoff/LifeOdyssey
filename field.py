@@ -138,6 +138,11 @@ class Field(QGraphicsScene):
             obj.mouseDrawEvent(event)
         return super().mouseMoveEvent(event)
 
+    def mousePressEvent(self, event) -> None:
+        obj = self.itemAt(event.scenePos(), QTransform())
+        obj.mouseDrawEvent(event)
+        return super().mousePressEvent(event)
+
 
 class Cell(QGraphicsRectItem):
 
