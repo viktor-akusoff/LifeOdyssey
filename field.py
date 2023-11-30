@@ -9,6 +9,7 @@ from PySide6.QtWidgets import (
     QGraphicsScene,
     QProgressDialog
 )
+from numpy.lib.stride_tricks import as_strided
 
 
 class Mode(Enum):
@@ -17,14 +18,57 @@ class Mode(Enum):
     PLAYING = 3
 
 
+rule_of_life_alive = np.zeros(8+1, np.uint8)
+rule_of_life_alive[[2, 3]] = 1
+
+rule_of_life_dead = np.zeros(8+1, np.uint8)
+rule_of_life_dead[3] = 1
+
+
+def rgb_to_int(color):
+    r, g, b = color
+    return (r << 16) + (g << 8) + (b)
+
+
+def int_to_rgb(number):
+    inum = int(number)
+    r = (inum & 0xff0000) >> 16
+    g = (inum & 0x00ff00) >> 8
+    b = (inum & 0x0000ff)
+    return (r, g, b)
+
+
+WHITE = rgb_to_int((255, 255, 255))
+BLACK = rgb_to_int((0, 0, 0))
+
+
+def neighborhoods(arr):
+    assert all(_len > 2 for _len in arr.shape)
+
+    nDims = len(arr.shape)
+    newShape = [_len-2 for _len in arr.shape]
+    newShape.extend([3] * nDims)
+
+    newStrides = arr.strides + arr.strides
+    return as_strided(arr, shape=newShape, strides=newStrides)
+
+
 class StateHolder:
 
-    def __init__(self, width=80, height=80) -> None:
+    def __init__(self, width=80, height=80):
         self.mode = Mode.DRAWING
         self.prev_mode = None
-        self.color = QColor(0, 0, 0)
+        self.color = BLACK
         self.step = 0
+        self.initBoard(width, height)
+        
+    def initBoard(self, width=80, height=80):
         self.field = np.zeros(shape=(100, width, height, 3)) + 255
+        board_size = (100, height, width)
+        full_size = tuple(i+2 for i in board_size)
+        self.full = np.zeros(full_size, dtype=np.uint8) + WHITE
+        self.board = self.full[:, 1:-1, 1:-1]
+        self.ndims = len(self.board.shape)
 
     def switchMode(self, mode):
         if self.mode != mode:
@@ -38,68 +82,49 @@ class StateHolder:
     def setColor(self, color):
         self.color = color
 
-    @staticmethod
-    def countLivingNeighbors(field, x, y):
-        h = len(field) - 1
-        w = len(field[0]) - 1
-        central_cell = 0 if np.sum(field[x][y]) == 765 else 1
-        min_x = max(x-1, 0)
-        min_y = max(y-1, 0)
-        max_x = min(x+1, w)
-        max_y = min(y+1, h)
-        square = np.sum(field[min_x:max_x+1, min_y:max_y+1], axis=2)
-        return np.count_nonzero(square - 765) - central_cell
-
-    def calcCell(self, k, x, y, h, w):
-        field = self.field[k]
-        is_alive = False if np.sum(field[x][y]) == 765 else True
-        min_x = max(x-1, 0)
-        min_y = max(y-1, 0)
-        max_x = min(x+1, w)
-        max_y = min(y+1, h)
-        slc = field[min_x:max_x+1, min_y:max_y+1]
-        square = np.sum(field[min_x:max_x+1, min_y:max_y+1], axis=2)
-        neighbors = np.count_nonzero(square - 765) - int(is_alive)
-        colors_dict = {}
-        for iy, ix in np.ndindex(square.shape):
-            color_key = str(slc[iy, ix])
-            if color_key == '[255. 255. 255.]':
+    def calcNewState(self, frame, bg=WHITE):
+        values = np.unique(self.board[frame-1])
+        new_shape = (len(values), *np.shape(self.board[frame-1]))
+        layers = np.zeros(shape=new_shape, dtype=np.uint32) + 0
+        for i, value in enumerate(values):
+            if value == bg:
                 continue
-            if color_key not in colors_dict.keys():
-                colors_dict[color_key] = 0
-            colors_dict[color_key] += 1
-        if (
-            (is_alive and neighbors in (2, 3)) or
-            (not is_alive and neighbors == 3)
-        ):
-            most_frequent_color_k = max(
-                colors_dict.items(),
-                key=operator.itemgetter(1)
-            )[0]
-            most_frequent_color_s = most_frequent_color_k[1:-1].split('.')[:-1]
-            most_frequent_color = [
-                int(element) for element in most_frequent_color_s
-            ]
-            return QColor(*most_frequent_color)
-        return QColor(255, 255, 255)
+            bw = np.copy(self.full[frame-1])
+            bw[bw == WHITE] = WHITE + 1
+            bw[bw != value] = WHITE + 1
+            bw[bw == value] = 1
+            bw[bw == WHITE + 1] = 0
+            bw_neighborhoods = neighborhoods(bw)
+            sum_over = tuple(-(i+1) for i in range(len(bw.shape)))
+            color_sum = np.sum(bw_neighborhoods, sum_over) - bw[1:-1, 1:-1]
+            layers[i] = color_sum
+        k, m = layers.shape[1:]
+        colors = np.zeros(shape=(k, m), dtype=np.uint32)
+        for i in range(k):
+            for j in range(m):
+                colors[i][j] = values[np.argmax(layers[:, i, j])]
+        bw = np.copy(self.full[frame-1])
+        bw[bw != WHITE] = 1
+        bw[bw == WHITE] = 0
+        bw_neighborhoods = neighborhoods(bw)
+        sum_over = tuple(-(i+1) for i in range(len(bw.shape)))
+        neighbors_sum = np.sum(bw_neighborhoods, sum_over) - bw[1:-1, 1:-1]
+        board = bw[1:-1, 1:-1]
+        board[:] = np.where(
+            board,
+            rule_of_life_alive[neighbors_sum],
+            rule_of_life_dead[neighbors_sum]
+        )
+        self.board[frame][board == 0] = WHITE
+        self.board[frame][board != 0] = colors[board != 0]
 
     def calcSteps(self):
         progress = QProgressDialog('Просчитывание итераций', 'Стоп', 1, 100)
         progress.setWindowTitle('Life Odyssey')
         progress.setWindowModality(Qt.WindowModality.WindowModal)
-        w = len(self.field[0]) - 1
-        h = len(self.field[0][0]) - 1
         for k in range(1, 100):
             progress.setValue(k)
-            for i in range(0, w-1):
-                for j in range(0, h-1):
-                    self.field[k][i][j] = self.calcCell(
-                        k-1,
-                        i,
-                        j,
-                        h,
-                        w,
-                    ).toTuple()[:-1]  # type: ignore
+            self.calcNewState(k, bg=WHITE)
             if progress.wasCanceled():
                 break
 
@@ -121,19 +146,20 @@ class Cell(QGraphicsRectItem):
         self.setPos(x * w, y * h)
         self.state_holder = state_holder
         self.coord = (x, y)
-        color = self.state_holder.field[k][x][y].tolist()
+        color = int_to_rgb(self.state_holder.board[k][y][x])
         self.setBrush(QColor(*color))
         self.setAcceptHoverEvents(True)
 
     def mouseDrawEvent(self, event) -> None:
-        color = QColor()
+        color = WHITE
         if self.state_holder.mode == Mode.DRAWING:
             color = self.state_holder.color
         elif self.state_holder.mode == Mode.ERASING:
-            color = QColor(255, 255, 255)
+            color = WHITE
         x, y = self.coord
-        self.state_holder.field[0][x][y] = np.array(color.toTuple())[:-1]
-        self.setBrush(color)
+        self.state_holder.board[0][y][x] = color
+        qcolor = QColor(*int_to_rgb(color))
+        self.setBrush(qcolor)
         return super().mousePressEvent(event)
 
     def hoverEnterEvent(self, event) -> None:

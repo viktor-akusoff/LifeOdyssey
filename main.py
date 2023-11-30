@@ -10,7 +10,7 @@ from PySide6.QtWidgets import (
     QColorDialog,
     QFileDialog,
 )
-from field import Cell, StateHolder, Mode, Field
+from field import Cell, StateHolder, Mode, Field, rgb_to_int, WHITE
 from ui_main import Ui_MainWindow
 from ui_create import Ui_createDialog
 
@@ -94,11 +94,11 @@ class LifeOdyssey(QMainWindow):
 
     def initField(self, k=0):
         scene = Field()
-        rows = len(self.state_holder.field[k])
-        cols = len(self.state_holder.field[k][0])
+        rows = len(self.state_holder.board[k])
+        cols = len(self.state_holder.board[k][0])
         for i in range(0, rows-1):
             for j in range(0, cols-1):
-                rect = Cell(i, j, 10, 10, self.state_holder, k)
+                rect = Cell(j, i, 10, 10, self.state_holder, k)
                 scene.addItem(rect)
         self.ui.fieldGraphicsView.setScene(scene)
         self.ui.fieldGraphicsView.show()
@@ -153,7 +153,7 @@ class LifeOdyssey(QMainWindow):
         self.ui.paletteButton.setStyleSheet(
             f'QPushButton {{background-color: {rgb_color};}}'
         )
-        self.state_holder.setColor(color)
+        self.state_holder.setColor(rgb_to_int(color.toTuple()[:-1]))
 
     def drawButton(self):
         self.stopButton()
@@ -201,7 +201,7 @@ class LifeOdyssey(QMainWindow):
             str(Path.home()),
             "Бинарный файл NumPy (*.npy)"
         )
-        data = self.state_holder.field[0]
+        data = self.state_holder.board
         self.setWindowTitle(f'Life Odyssey - {address}')
         np.save(address, data)
 
@@ -213,10 +213,9 @@ class LifeOdyssey(QMainWindow):
             "Бинарный файл NumPy (*.npy)"
         )
         data = np.load(address)
-        h = len(data)
-        w = len(data[0])
-        self.state_holder.field = np.zeros(shape=(100, h, w, 3)) + 255
-        self.state_holder.field[0] = data
+        _, w, h = data.shape
+        self.state_holder = StateHolder(h, w)
+        self.state_holder.board[:] = data[:]
         self.setWindowTitle(f'Life Odyssey - {address}')
         self.initField()
 
@@ -233,7 +232,7 @@ class LifeOdyssey(QMainWindow):
         self.state_holder.calcSteps()
 
     def cleanField(self):
-        self.state_holder.field[0] = 255
+        self.state_holder.board[:] = WHITE
         self.initField()
 
 
