@@ -65,7 +65,7 @@ class StateHolder:
 
     def initBoard(self, width=80, height=80):
         self.field = np.zeros(shape=(self.frames, width, height, 3)) + 255
-        board_size = (self.frames, height, width)
+        board_size = (self.frames-2, height, width)
         full_size = tuple(i+2 for i in board_size)
         self.full = np.zeros(full_size, dtype=np.uint8) + WHITE
         self.board = self.full[:, 1:-1, 1:-1]
