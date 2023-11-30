@@ -134,6 +134,9 @@ QSpinBox::down-button:pressed {
 	background-color: #f35b04;
 }</string>
          </property>
+         <property name="maximum">
+          <number>99999</number>
+         </property>
         </widget>
        </item>
        <item>

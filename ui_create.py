@@ -17,20 +17,20 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QAbstractButton, QApplication, QDialog, QDialogButtonBox,
     QLabel, QLineEdit, QSizePolicy, QSpacerItem,
-    QVBoxLayout, QWidget)
+    QSpinBox, QVBoxLayout, QWidget)
 
 class Ui_createDialog(object):
     def setupUi(self, createDialog):
         if not createDialog.objectName():
             createDialog.setObjectName(u"createDialog")
-        createDialog.resize(400, 150)
+        createDialog.resize(400, 200)
         sizePolicy = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(createDialog.sizePolicy().hasHeightForWidth())
         createDialog.setSizePolicy(sizePolicy)
-        createDialog.setMinimumSize(QSize(400, 150))
-        createDialog.setMaximumSize(QSize(400, 150))
+        createDialog.setMinimumSize(QSize(400, 200))
+        createDialog.setMaximumSize(QSize(400, 200))
         createDialog.setSizeGripEnabled(False)
         createDialog.setModal(True)
         self.verticalLayout_2 = QVBoxLayout(createDialog)
@@ -61,6 +61,23 @@ class Ui_createDialog(object):
 
         self.verticalLayout_2.addItem(self.verticalSpacer)
 
+        self.label_3 = QLabel(createDialog)
+        self.label_3.setObjectName(u"label_3")
+
+        self.verticalLayout_2.addWidget(self.label_3)
+
+        self.framesNumberSpinBox = QSpinBox(createDialog)
+        self.framesNumberSpinBox.setObjectName(u"framesNumberSpinBox")
+        sizePolicy1 = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Maximum)
+        sizePolicy1.setHorizontalStretch(0)
+        sizePolicy1.setVerticalStretch(0)
+        sizePolicy1.setHeightForWidth(self.framesNumberSpinBox.sizePolicy().hasHeightForWidth())
+        self.framesNumberSpinBox.setSizePolicy(sizePolicy1)
+        self.framesNumberSpinBox.setMinimum(100)
+        self.framesNumberSpinBox.setMaximum(99999)
+
+        self.verticalLayout_2.addWidget(self.framesNumberSpinBox)
+
         self.buttonBox = QDialogButtonBox(createDialog)
         self.buttonBox.setObjectName(u"buttonBox")
         self.buttonBox.setOrientation(Qt.Horizontal)
@@ -82,5 +99,6 @@ class Ui_createDialog(object):
         self.lineWidth.setPlaceholderText(QCoreApplication.translate("createDialog", u"0", None))
         self.label.setText(QCoreApplication.translate("createDialog", u"\u0412\u044b\u0441\u043e\u0442\u0430:", None))
         self.lineHeight.setPlaceholderText(QCoreApplication.translate("createDialog", u"0", None))
+        self.label_3.setText(QCoreApplication.translate("createDialog", u"\u041a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e \u043a\u0430\u0434\u0440\u043e\u0432", None))
     # retranslateUi
 

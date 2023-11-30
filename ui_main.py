@@ -140,6 +140,7 @@ class Ui_MainWindow(object):
                         "nBox::down-button:pressed {\n"
 "	background-color: #f35b04;\n"
 "}")
+        self.frameSpinBox.setMaximum(99999)
 
         self.tools_layout.addWidget(self.frameSpinBox)
 

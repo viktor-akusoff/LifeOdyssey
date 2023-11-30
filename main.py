@@ -138,14 +138,14 @@ class LifeOdyssey(QMainWindow):
     def jumpForwardButton(self):
         self.setPlayMode()
         old_val = self.moveSpinbox(5)
-        if old_val > 94:
+        if old_val > self.state_holder.frames-5:
             self.ui.frameSpinBox.setValue(0)
 
     def jumpBackwardButton(self):
         self.setPlayMode()
         old_val = self.moveSpinbox(-5)
         if old_val < 5:
-            self.ui.frameSpinBox.setValue(99)
+            self.ui.frameSpinBox.setValue(self.state_holder.frames)
 
     def paletteButton(self):
         color = QColorDialog.getColor()
@@ -174,7 +174,7 @@ class LifeOdyssey(QMainWindow):
     def nextIteration(self):
         self.curr_time = self.curr_time.addSecs(1)
         old_val = self.moveSpinbox(1)
-        if old_val == 99:
+        if old_val == self.state_holder.frames-1:
             self.ui.frameSpinBox.setValue(0)
 
     def updateModeIndicator(self):
@@ -213,8 +213,8 @@ class LifeOdyssey(QMainWindow):
             "Бинарный файл NumPy (*.npy)"
         )
         data = np.load(address)
-        _, w, h = data.shape
-        self.state_holder = StateHolder(h, w)
+        f, w, h = data.shape
+        self.state_holder = StateHolder(h, w, f)
         self.state_holder.board[:] = data[:]
         self.setWindowTitle(f'Life Odyssey - {address}')
         self.initField()
@@ -224,7 +224,9 @@ class LifeOdyssey(QMainWindow):
         if dialog.exec():
             w = int(dialog.ui.lineWidth.text())
             h = int(dialog.ui.lineHeight.text())
-            self.state_holder = StateHolder(w, h)
+            frames = int(dialog.ui.framesNumberSpinBox.value())
+            print(frames)
+            self.state_holder = StateHolder(w, h, frames)
             self.setWindowTitle('Life Odyssey - Новое поле')
             self.initField()
 

@@ -55,16 +55,17 @@ def neighborhoods(arr):
 
 class StateHolder:
 
-    def __init__(self, width=80, height=80):
+    def __init__(self, width=80, height=80, frames=100):
+        self.frames = frames
         self.mode = Mode.DRAWING
         self.prev_mode = None
         self.color = BLACK
         self.step = 0
         self.initBoard(width, height)
-        
+
     def initBoard(self, width=80, height=80):
-        self.field = np.zeros(shape=(100, width, height, 3)) + 255
-        board_size = (100, height, width)
+        self.field = np.zeros(shape=(self.frames, width, height, 3)) + 255
+        board_size = (self.frames, height, width)
         full_size = tuple(i+2 for i in board_size)
         self.full = np.zeros(full_size, dtype=np.uint8) + WHITE
         self.board = self.full[:, 1:-1, 1:-1]
@@ -119,10 +120,10 @@ class StateHolder:
         self.board[frame][board != 0] = colors[board != 0]
 
     def calcSteps(self):
-        progress = QProgressDialog('Просчитывание итераций', 'Стоп', 1, 100)
+        progress = QProgressDialog('Просчитывание итераций', 'Стоп', 1, self.frames-1)
         progress.setWindowTitle('Life Odyssey')
         progress.setWindowModality(Qt.WindowModality.WindowModal)
-        for k in range(1, 100):
+        for k in range(1, self.frames-1):
             progress.setValue(k)
             self.calcNewState(k, bg=WHITE)
             if progress.wasCanceled():
