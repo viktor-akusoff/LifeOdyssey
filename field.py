@@ -119,7 +119,7 @@ class StateHolder:
         self.board[frame][board != 0] = colors[board != 0]
 
     def calcSteps(self):
-        progress = QProgressDialog('Просчитывание итераций', 'Стоп', 1, self.frames-1)
+        progress = QProgressDialog('Просчитывание итераций', 'Стоп', 1, self.frames)
         progress.setWindowTitle('Life Odyssey')
         progress.setWindowModality(Qt.WindowModality.WindowModal)
         for k in range(1, self.frames-1):

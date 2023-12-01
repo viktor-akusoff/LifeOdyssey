@@ -145,7 +145,8 @@ class LifeOdyssey(QMainWindow):
         self.setPlayMode()
         old_val = self.moveSpinbox(-5)
         if old_val < 5:
-            self.ui.frameSpinBox.setValue(self.state_holder.frames)
+            print(self.state_holder.frames)
+            self.ui.frameSpinBox.setValue(self.state_holder.frames-1)
 
     def paletteButton(self):
         color = QColorDialog.getColor()
