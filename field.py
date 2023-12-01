@@ -1,5 +1,4 @@
 import numpy as np
-import operator
 from enum import Enum
 from PySide6.QtGui import QColor, QTransform
 from PySide6.QtCore import Qt
