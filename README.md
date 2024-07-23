@@ -1,5 +1,7 @@
 ## Life Odyssey
 
+![image](https://github.com/user-attachments/assets/388aa585-8701-4505-b106-815b35bec705)
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 Life Odyssey is a desktop application built with PySide6 and NumPy that provides a visual and interactive simulation of Conway's Game of Life, a classic cellular automaton.
